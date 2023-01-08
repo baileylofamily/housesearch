@@ -210,8 +210,10 @@ class CraigsListSpider(scrapy.Spider):
             self.items += 1
 
     def closed(self, reason):
-        self.index_file = open('index.html', 'w')
+        self.index_file = open('website/index.html', 'w')
         self.index_file.write('<head>')
+        self.index_file.write('<link rel="icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">')
+        self.index_file.write('<link rel="apple-touch-icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">')
         self.index_file.write('<title>House Search</title>')
         self.index_file.write('<header><h1>House Search</h1></header>')
         self.index_file.write('</head>')

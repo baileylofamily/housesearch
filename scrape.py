@@ -2,6 +2,7 @@
 import scrapy
 import datetime
 import time
+import zoneinfo
 
 class CraigsListSpider(scrapy.Spider):
     name = 'craigslist'
@@ -43,6 +44,7 @@ class CraigsListSpider(scrapy.Spider):
     unfurnished_responses = []
 
     items = 0
+    queries = 0
 
     index_file = None
     furnished = []
@@ -80,6 +82,7 @@ class CraigsListSpider(scrapy.Spider):
             for sel in response.xpath('//div[@class="result-info"]'):
                 id = sel.xpath('.//a[@class="result-title hdrlnk"]/@data-id').extract()[0]
                 self.furnished.append(id)
+                self.queries += 1
 
     def process_unfurnished(self, responses):
 
@@ -113,6 +116,7 @@ class CraigsListSpider(scrapy.Spider):
                 if id in self.furnished or id in processed_ids:
                     continue
                 processed_ids.append(id)
+                self.queries += 1
 
                 url = sel.xpath('.//a[@class="result-title hdrlnk"]/@href').extract()[0]
                 title = sel.xpath('.//a[@class="result-title hdrlnk"]/text()').extract()[0]
@@ -152,7 +156,7 @@ class CraigsListSpider(scrapy.Spider):
 
                     time = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M")
 
-                now = datetime.datetime.now()
+                now = datetime.datetime.now(zoneinfo.ZoneInfo('Canada/Pacific'))
                 seconds = (now - time).total_seconds()
                 # ignore if posting is older than three days
                 if seconds > 3600 * 24 * 3:
@@ -232,7 +236,8 @@ class CraigsListSpider(scrapy.Spider):
 
         self.index_file.write('</ul>')
         self.index_file.write('<p></p>')
-        time_str = time.strftime('%X %x %Z')
-        self.index_file.write(f'Processed {self.items} items at {time_str}')
+        now = datetime.datetime.now(zoneinfo.ZoneInfo('Canada/Pacific'))
+        time_str = now.strftime('%X %x %Z')
+        self.index_file.write(f'Filtered {self.queries} items at {time_str}')
         self.index_file.write('</body>')
         self.index_file.close()

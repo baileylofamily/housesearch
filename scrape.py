@@ -7,6 +7,8 @@ import zoneinfo
 class CraigsListSpider(scrapy.Spider):
     name = 'craigslist'
 
+    pacific = zoneinfo.ZoneInfo('Canada/Pacific')
+
     custom_settings = {
         # 0.5s download delay
         'DOWNLOAD_DELAY': 2.0
@@ -138,7 +140,7 @@ class CraigsListSpider(scrapy.Spider):
                 area = details[2][:-2]
 
                 time = sel.xpath('.//time[@class="result-date"]/@datetime')[0].extract()
-                time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M")
+                time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M").replace(tzinfo=self.pacific)
                 latitude = 0
                 longitude = 0
 
@@ -154,9 +156,9 @@ class CraigsListSpider(scrapy.Spider):
                             region = region_id
                             break
 
-                    time = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M")
+                    time = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M").replace(tzinfo=self.pacific)
 
-                now = datetime.datetime.now(zoneinfo.ZoneInfo('Canada/Pacific'))
+                now = datetime.datetime.now(self.pacific)
                 seconds = (now - time).total_seconds()
                 # ignore if posting is older than three days
                 if seconds > 3600 * 24 * 3:
@@ -236,7 +238,7 @@ class CraigsListSpider(scrapy.Spider):
 
         self.index_file.write('</ul>')
         self.index_file.write('<p></p>')
-        now = datetime.datetime.now(zoneinfo.ZoneInfo('Canada/Pacific'))
+        now = datetime.datetime.now(self.pacific)
         time_str = now.strftime('%X %x %Z')
         self.index_file.write(f'Filtered {self.queries} items at {time_str}')
         self.index_file.write('</body>')

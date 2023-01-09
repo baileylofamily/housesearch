@@ -35,7 +35,7 @@ class CraigsListSpider(scrapy.Spider):
     # and subtract the furnished homes from the without list using ids
 
     # for i in [0]:
-    for i in (0, 100, 200, 300, 400):
+    for i in (0, 100, 200, 300, 400, 500):
         start_urls.append('%s&s=%s' % (url, i))
         start_urls.append('%s&s=%s&is_furnished=1' % (url, i))
 
@@ -231,8 +231,8 @@ class CraigsListSpider(scrapy.Spider):
         self.process_unfurnished(self.unfurnished_responses)
 
         self.index_file.write('</ul>')
+        self.index_file.write('<p></p>')
+        time_str = time.strftime('%X %x %Z')
+        self.index_file.write(f'Processed {self.items} items at {time_str}')
         self.index_file.write('</body>')
         self.index_file.close()
-
-        print('Processed %s Items' % self.items)
-

@@ -23,7 +23,7 @@ class CraigsListSpider(scrapy.Spider):
     search_terms.append('min_bedrooms=2')
     search_terms.append('max_bedrooms=5')
     search_terms.append('min_bathrooms=2')
-    search_terms.append('minSqft=1300')
+    search_terms.append('minSqft=1000')
     search_terms.append('housing_type=3') # cottage/cabin
     search_terms.append('housing_type=4') # duplex (two units in one building)
     search_terms.append('housing_type=6') # house

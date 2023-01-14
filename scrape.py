@@ -220,6 +220,9 @@ class CraigsListSpider(scrapy.Spider):
         self.index_file.write('<head>')
         self.index_file.write('<link rel="icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">')
         self.index_file.write('<link rel="apple-touch-icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">')
+        self.index_file.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>')
+        self.index_file.write('<link rel="stylesheet" type="text/css" href="./style.css" />')
+        self.index_file.write('<script type="module" src="./index.js"></script>')
         self.index_file.write('<title>House Search</title>')
         self.index_file.write('<header><h1>House Search</h1></header>')
         self.index_file.write('</head>')
@@ -232,7 +235,9 @@ class CraigsListSpider(scrapy.Spider):
         # self.index_file.write('<li style="color: #7c1887;font-weight:bold"> Region 5 = West Vancouver </li>')
         self.index_file.write('<li style="color: #000000;font-weight:bold"> Region 6 = Downtown </li>')
         self.index_file.write('<p></p>')
-
+        self.index_file.write('<div id="map"></div>')
+        self.index_file.write('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>')
+        self.index_file.write('<p></p>')
         self.process_furnished(self.furnished_responses)
         self.process_unfurnished(self.unfurnished_responses)
 
@@ -243,3 +248,6 @@ class CraigsListSpider(scrapy.Spider):
         self.index_file.write(f'Filtered {self.queries} items at {time_str}')
         self.index_file.write('</body>')
         self.index_file.close()
+
+# Google Maps Embed API
+# AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I

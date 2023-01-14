@@ -236,7 +236,7 @@ class CraigsListSpider(scrapy.Spider):
         self.index_file.write('<li style="color: #000000;font-weight:bold"> Region 6 = Downtown </li>')
         self.index_file.write('<p></p>')
         self.index_file.write('<div id="map"></div>')
-        self.index_file.write('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>')
+        self.index_file.write('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I&callback=initMap&v=weekly" defer></script>')
         self.index_file.write('<p></p>')
         self.process_furnished(self.furnished_responses)
         self.process_unfurnished(self.unfurnished_responses)

@@ -20,10 +20,10 @@ class CraigsListSpider(scrapy.Spider):
     search_terms.append('hasPic=1')
     search_terms.append('min_price=3700')
     search_terms.append('max_price=5700')
-    search_terms.append('min_bedrooms=3')
+    search_terms.append('min_bedrooms=2')
     search_terms.append('max_bedrooms=5')
     search_terms.append('min_bathrooms=2')
-    search_terms.append('minSqft=1500')
+    search_terms.append('minSqft=1300')
     search_terms.append('housing_type=3') # cottage/cabin
     search_terms.append('housing_type=4') # duplex (two units in one building)
     search_terms.append('housing_type=6') # house
@@ -110,7 +110,7 @@ class CraigsListSpider(scrapy.Spider):
             location_regions.append((49.27266, -123.11738, 49.27049, -123.095, 2))
             # location_regions.append((49.4, -123.129, 49.295, -122.93, 4))
             # location_regions.append((49.4, -123.3, 49.298, -123.129, 5))
-            # location_regions.append((49.31, -123.17, 49.26, -123.09, 6))
+            location_regions.append((49.31, -123.17, 49.26, -123.09, 6))
 
             for sel in response.xpath('//div[@class="result-info"]'):
                 id = sel.xpath('.//a[@class="result-title hdrlnk"]/@data-id').extract()[0]
@@ -230,7 +230,7 @@ class CraigsListSpider(scrapy.Spider):
         self.index_file.write('<li style="color: #7c1887;font-weight:bold"> Region 3 = Eastside </li>')
         # self.index_file.write('<li style="color: #184c87;font-weight:bold"> Region 4 = North Vancouver </li>')
         # self.index_file.write('<li style="color: #7c1887;font-weight:bold"> Region 5 = West Vancouver </li>')
-        # self.index_file.write('<li style="color: #000000;font-weight:bold"> Region 6 = Downtown </li>')
+        self.index_file.write('<li style="color: #000000;font-weight:bold"> Region 6 = Downtown </li>')
         self.index_file.write('<p></p>')
 
         self.process_furnished(self.furnished_responses)

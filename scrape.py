@@ -45,7 +45,7 @@ class CraigsListSpider(scrapy.Spider):
     furnished_responses = []
     unfurnished_responses = []
 
-    items = 0
+    items = 1
     queries = 0
 
     index_file = None
@@ -207,66 +207,71 @@ class CraigsListSpider(scrapy.Spider):
             else:
                 time = '%s hours' % int(seconds / 3600)
 
-            self.index_file.write('<li>')
-            self.index_file.write(f'<span font-weight:bold">({self.items})</span> ')
+            self.index_file.write('<li>\n')
+            self.index_file.write(f'<span font-weight:bold">({self.items})</span> \n')
             # self.index_file.write(f'<span style="color: {region_color};font-weight:bold">[{region}]</span> ')
             # if 'townhouse' in entry['title'].lower() or 'town house' in entry['title'].lower():
             #     self.index_file.write('<span style="font-weight:bold">')
             # else:
-            self.index_file.write('<span>')
-            self.index_file.write(f'{price} ({bedroom}br {area}ft) {title} ')
-            self.index_file.write('</span>')
-            self.index_file.write(f'<a href="{url}">{id}</a>')
-            self.index_file.write(f' [{time}]')
-            self.index_file.write('</li>')
-            self.index_file.write('</br>')
+            self.index_file.write('<span>\n')
+            self.index_file.write(f'{price} ({bedroom}br {area}ft) {title} \n')
+            self.index_file.write('</span>\n')
+            self.index_file.write(f'<a href="{url}">{id}</a>\n')
+            self.index_file.write(f' [{time}]\n')
+            self.index_file.write('</li>\n')
+            self.index_file.write('</br>\n')
 
-            self.script_file.write(f'const pos{self.items} = {{ lat: {latitude}, lng: {longitude} }};')
-            self.script_file.write(f'const marker{self.items} = new google.maps.Marker({{position: pos{self.items}, map: map,}});')
+            self.script_file.write(f'const pos{self.items} = {{ lat: {latitude}, lng: {longitude} }};\n')
+            self.script_file.write(f'const marker{self.items} = new google.maps.Marker({{position: pos{self.items}, map: map,}});\n')
 
             self.items += 1
 
     def closed(self, reason):
         self.script_file = open('website/index.js', 'w')
-        self.script_file.write('function initMap() {')
-        self.script_file.write('const vancouver = { lat: 49.25, lng: -123.15 };')
-        self.script_file.write('const map = new google.maps.Map(document.getElementById("map"), { zoom: 4, center: vancouver, }));')
+        self.script_file.write('function initMap() {\n')
+        self.script_file.write('const vancouver = { lat: 49.25, lng: -123.15 };\n')
+        self.script_file.write('const map = new google.maps.Map(document.getElementById("map"), { zoom: 4, center: vancouver, }));\n')
 
         self.index_file = open('website/index.html', 'w')
-        self.index_file.write('<head>')
-        self.index_file.write('<link rel="icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">')
-        self.index_file.write('<link rel="apple-touch-icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">')
-        self.index_file.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>')
-        self.index_file.write('<link rel="stylesheet" type="text/css" href="./style.css" />')
-        self.index_file.write('<script type="module" src="./index.js"></script>')
-        self.index_file.write('<title>House Search</title>')
-        self.index_file.write('<header><h1>House Search</h1></header>')
-        self.index_file.write('</head>')
-        self.index_file.write('<body>')
-        self.index_file.write('<ul>')
+        self.index_file.write('<head>\n')
+        self.index_file.write('<link rel="icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">\n')
+        self.index_file.write('<link rel="apple-touch-icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">\n')
+        self.index_file.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>\n')
+        self.index_file.write('<link rel="stylesheet" type="text/css" href="./style.css" />\n')
+        self.index_file.write('<script type="module" src="./index.js"></script>\n')
+        self.index_file.write('<title>House Search</title>\n')
+        self.index_file.write('<header><h1>House Search</h1></header>\n')
+        self.index_file.write('</head>\n')
+        self.index_file.write('<body>\n')
+        self.index_file.write('<ul>\n')
         # self.index_file.write('<li style="color: #d4540f;font-weight:bold"> Region 1 = UBC / Point Grey / Dunbar </li>')
         # self.index_file.write('<li style="color: #368718;font-weight:bold"> Region 2 = Kits / Kerrisdale / South Granville / Mount Pleasant </li>')
         # self.index_file.write('<li style="color: #7c1887;font-weight:bold"> Region 3 = Eastside </li>')
         # # self.index_file.write('<li style="color: #184c87;font-weight:bold"> Region 4 = North Vancouver </li>')
         # # self.index_file.write('<li style="color: #7c1887;font-weight:bold"> Region 5 = West Vancouver </li>')
         # self.index_file.write('<li style="color: #000000;font-weight:bold"> Region 6 = Downtown </li>')
-        self.index_file.write('<p></p>')
-        self.index_file.write('<div id="map"></div>')
-        self.index_file.write('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I&callback=initMap&v=weekly" defer></script>')
-        self.index_file.write('<p></p>')
+        self.index_file.write('<p></p>\n')
+        self.index_file.write('<div id="map"></div>\n')
+        self.index_file.write('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I&callback=initMap&v=weekly" defer></script>\n')
+        self.index_file.write('<p></p>\n')
 
         self.process_furnished(self.furnished_responses)
         self.process_unfurnished(self.unfurnished_responses)
 
-        self.index_file.write('</ul>')
-        self.index_file.write('<p></p>')
+        self.index_file.write('</ul>\n')
+        self.index_file.write('<p></p>\n')
         now = datetime.datetime.now(self.pacific)
         time_str = now.strftime('%X %x %Z')
         self.index_file.write(f'Filtered {self.queries} items at {time_str}')
-        self.index_file.write('</body>')
+        self.index_file.write('</body>\n')
         self.index_file.close()
 
         self.script_file.close()
+
+        with open(self.script_file) as f:
+            lines = f.readlines()
+            for line in lines:
+                print(line)
 
 # Google Maps Embed API
 # AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I

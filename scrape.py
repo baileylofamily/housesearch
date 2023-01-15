@@ -49,6 +49,7 @@ class CraigsListSpider(scrapy.Spider):
     queries = 0
 
     index_file = None
+    script_file = None
     furnished = []
     locations = dict()
     repost = []
@@ -172,13 +173,15 @@ class CraigsListSpider(scrapy.Spider):
                 while seconds in unsorted_entries:
                     seconds += 1
 
-                unsorted_entries[seconds] = {'region': region, 'price': price, 'bedroom': bedroom, 'area': area, 'title': title, 'url': url, 'id': id}
+                unsorted_entries[seconds] = {'lat': latitude, 'long': longitude, 'region': region, 'price': price, 'bedroom': bedroom, 'area': area, 'title': title, 'url': url, 'id': id}
 
         entries = {k: unsorted_entries[k] for k in sorted(unsorted_entries)}
 
         for (seconds, entry) in entries.items():
 
             region = entry['region']
+            latitude = entry['latitude']
+            longitude = entry['longitude']
 
             region_color = '#000000'
             if region == 1:
@@ -213,9 +216,20 @@ class CraigsListSpider(scrapy.Spider):
             self.index_file.write('</li>')
             self.index_file.write('</br>')
 
+            self.script_file.write(f'const pos{self.items} = {{ lat: {latitude}, lng: {longitude} }};')
+            self.script_file.write(f'const marker{self.items} = new google.maps.Marker({{position: pos{self.items}, map: map,}});')
+
             self.items += 1
 
     def closed(self, reason):
+        self.script_file = open('website/index.js', 'w')
+        self.script_file.write('function initMap() {')
+        self.script_file.write('const vancouver = { lat: 49.25, lng: -123.15 };')
+        self.script_file.write('const map = new google.maps.Map(document.getElementById("map"), {')
+        self.script_file.write('zoom: 4,')
+        self.script_file.write('center: vancouver,')
+        self.script_file.write(')});')
+
         self.index_file = open('website/index.html', 'w')
         self.index_file.write('<head>')
         self.index_file.write('<link rel="icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">')
@@ -238,6 +252,7 @@ class CraigsListSpider(scrapy.Spider):
         self.index_file.write('<div id="map"></div>')
         self.index_file.write('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I&callback=initMap&v=weekly" defer></script>')
         self.index_file.write('<p></p>')
+
         self.process_furnished(self.furnished_responses)
         self.process_unfurnished(self.unfurnished_responses)
 
@@ -248,6 +263,8 @@ class CraigsListSpider(scrapy.Spider):
         self.index_file.write(f'Filtered {self.queries} items at {time_str}')
         self.index_file.write('</body>')
         self.index_file.close()
+
+        self.script_file.close()
 
 # Google Maps Embed API
 # AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I

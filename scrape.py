@@ -230,7 +230,7 @@ class CraigsListSpider(scrapy.Spider):
         self.script_file = open('website/index.js', 'w')
         self.script_file.write('function initMap() {\n')
         self.script_file.write('const vancouver = { lat: 49.25, lng: -123.15 };\n')
-        self.script_file.write('const map = new google.maps.Map(document.getElementById("map"), { zoom: 4, center: vancouver, }));\n')
+        self.script_file.write('const map = new google.maps.Map(document.getElementById("map"), { zoom: 4, center: vancouver, });\n')
 
         self.index_file = open('website/index.html', 'w')
         self.index_file.write('<head>\n')
@@ -265,6 +265,8 @@ class CraigsListSpider(scrapy.Spider):
         self.index_file.write('</body>\n')
         self.index_file.close()
 
+        self.script_file.write('}\n')
+        self.script_file.write('window.initMap = initMap;\n')
         self.script_file.close()
 
         with open(self.script_file) as f:

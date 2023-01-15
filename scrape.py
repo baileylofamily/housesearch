@@ -230,7 +230,7 @@ class CraigsListSpider(scrapy.Spider):
         self.script_file = open('website/index.js', 'w')
         self.script_file.write('function initMap() {')
         self.script_file.write('const vancouver = { lat: 49.25, lng: -123.15 };')
-        self.script_file.write('const map = new google.maps.Map(document.getElementById("map"), { zoom: 4, center: vancouver, });')
+        self.script_file.write('const map = new google.maps.Map(document.getElementById("map"), { zoom: 4, center: vancouver, }));')
 
         self.index_file = open('website/index.html', 'w')
         self.index_file.write('<head>')

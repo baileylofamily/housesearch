@@ -180,8 +180,14 @@ class CraigsListSpider(scrapy.Spider):
         for (seconds, entry) in entries.items():
 
             region = entry['region']
-            latitude = entry['latitude']
-            longitude = entry['longitude']
+            latitude = entry['lat']
+            longitude = entry['long']
+            price = entry['price']
+            bedroom = entry['bedroom']
+            area = entry['area']
+            title = entry['title']
+            url = entry['url']
+            id = entry['id']
 
             region_color = '#000000'
             if region == 1:
@@ -202,17 +208,16 @@ class CraigsListSpider(scrapy.Spider):
                 time = '%s hours' % int(seconds / 3600)
 
             self.index_file.write('<li>')
-            if seconds < 3600*24:
-                self.index_file.write('* ')
-            self.index_file.write('<span style="color: %s;font-weight:bold">[%s]</span> ' % (region_color, region))
-            if 'townhouse' in entry['title'].lower() or 'town house' in entry['title'].lower():
-                self.index_file.write('<span style="font-weight:bold">')
-            else:
-                self.index_file.write('<span>')
-            self.index_file.write('%s (%sbr %sft) %s ' % (entry['price'], entry['bedroom'], entry['area'], entry['title']))
+            self.index_file.write(f'<span font-weight:bold">({self.items})</span> ')
+            # self.index_file.write(f'<span style="color: {region_color};font-weight:bold">[{region}]</span> ')
+            # if 'townhouse' in entry['title'].lower() or 'town house' in entry['title'].lower():
+            #     self.index_file.write('<span style="font-weight:bold">')
+            # else:
+            self.index_file.write('<span>')
+            self.index_file.write(f'{price} ({bedroom}br {area}ft) {title} ')
             self.index_file.write('</span>')
-            self.index_file.write('<a href="%s">%s</a>' % (entry['url'], entry['id']))
-            self.index_file.write(' [%s]' % time)
+            self.index_file.write(f'<a href="{url}">{id}</a>')
+            self.index_file.write(f' [{time}]')
             self.index_file.write('</li>')
             self.index_file.write('</br>')
 

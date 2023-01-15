@@ -208,7 +208,7 @@ class CraigsListSpider(scrapy.Spider):
                 time = '%s hours' % int(seconds / 3600)
 
             self.index_file.write('<li>\n')
-            self.index_file.write(f'<span font-weight:bold">({self.items})</span> \n')
+            # self.index_file.write(f'<span font-weight:bold">({self.items})</span> \n')
             # self.index_file.write(f'<span style="color: {region_color};font-weight:bold">[{region}]</span> ')
             # if 'townhouse' in entry['title'].lower() or 'town house' in entry['title'].lower():
             #     self.index_file.write('<span style="font-weight:bold">')
@@ -243,7 +243,6 @@ class CraigsListSpider(scrapy.Spider):
         self.index_file.write('<header><h1>House Search</h1></header>\n')
         self.index_file.write('</head>\n')
         self.index_file.write('<body>\n')
-        self.index_file.write('<ul>\n')
         # self.index_file.write('<li style="color: #d4540f;font-weight:bold"> Region 1 = UBC / Point Grey / Dunbar </li>')
         # self.index_file.write('<li style="color: #368718;font-weight:bold"> Region 2 = Kits / Kerrisdale / South Granville / Mount Pleasant </li>')
         # self.index_file.write('<li style="color: #7c1887;font-weight:bold"> Region 3 = Eastside </li>')
@@ -255,10 +254,10 @@ class CraigsListSpider(scrapy.Spider):
         self.index_file.write('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I&callback=initMap&v=weekly" defer></script>\n')
         self.index_file.write('<p></p>\n')
 
+        self.index_file.write('<ol>\n')
         self.process_furnished(self.furnished_responses)
         self.process_unfurnished(self.unfurnished_responses)
-
-        self.index_file.write('</ul>\n')
+        self.index_file.write('</ol>\n')
         self.index_file.write('<p></p>\n')
         now = datetime.datetime.now(self.pacific)
         time_str = now.strftime('%X %x %Z')

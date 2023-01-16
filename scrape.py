@@ -222,7 +222,7 @@ class CraigsListSpider(scrapy.Spider):
             self.index_file.write('</br>\n')
 
             self.script_file.write(f'const pos{self.items} = {{ lat: {latitude}, lng: {longitude} }};\n')
-            self.script_file.write(f'const marker{self.items} = new google.maps.Marker({{position: pos{self.items}, map: map,}});\n')
+            self.script_file.write(f'const marker{self.items} = new google.maps.Marker({{position: pos{self.items}, map: map, icon: "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red{self.items}.png"}});\n')
 
             self.items += 1
 

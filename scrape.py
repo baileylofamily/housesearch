@@ -269,10 +269,5 @@ class CraigsListSpider(scrapy.Spider):
         self.script_file.write('window.initMap = initMap;\n')
         self.script_file.close()
 
-        with open(self.script_file) as f:
-            lines = f.readlines()
-            for line in lines:
-                print(line)
-
 # Google Maps Embed API
 # AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I

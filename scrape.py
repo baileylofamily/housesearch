@@ -117,6 +117,7 @@ class CraigsListSpider(scrapy.Spider):
                 id = sel.xpath('.//a[@class="result-title hdrlnk"]/@data-id').extract()[0]
                 # ignore furnished or duplicate ids
                 if id in self.furnished or id in processed_ids:
+                    print(f'[skip] Ignoring furnished {id}')
                     continue
                 processed_ids.append(id)
                 self.queries += 1
@@ -127,10 +128,12 @@ class CraigsListSpider(scrapy.Spider):
                 try:
                     title.encode('ascii')
                 except UnicodeEncodeError:
+                    print(f'[skip] Ignoring non-ascii characters {id}')
                     continue
 
                 # ignore reposts
                 if url in self.repost:
+                    print(f'[skip] Ignoring reposts {id}')
                     continue
 
                 meta = sel.xpath('.//span[@class="result-meta"]')
@@ -163,11 +166,13 @@ class CraigsListSpider(scrapy.Spider):
                 seconds = (now - time).total_seconds()
                 # ignore if posting is older than three days
                 if seconds > 3600 * 24 * 3:
+                    print(f'[skip] Ignoring old posts {id} {seconds}')
                     continue
 
                 # ignore property locations outside of desired regions
 
                 if not region:
+                    print(f'[skip] Ignoring region {id}')
                     continue
 
                 while seconds in unsorted_entries:
@@ -176,6 +181,9 @@ class CraigsListSpider(scrapy.Spider):
                 unsorted_entries[seconds] = {'lat': latitude, 'long': longitude, 'region': region, 'price': price, 'bedroom': bedroom, 'area': area, 'title': title, 'url': url, 'id': id}
 
         entries = {k: unsorted_entries[k] for k in sorted(unsorted_entries)}
+
+        entries_size = len(entries)
+        print(f'Entries: {entries_size}')
 
         for (seconds, entry) in entries.items():
 

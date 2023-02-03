@@ -37,10 +37,10 @@ class CraigsListSpider(scrapy.Spider):
     # there is no is_unfurnished term, so search twice, once with furnished=1 and once without
     # and subtract the furnished homes from the without list using ids
 
-    # for i in [0]:
-    for i in (0, 100, 200, 300, 400, 500):
+    for i in [0]:
+    # for i in (0, 100, 200, 300, 400, 500):
         start_urls.append('%s&s=%s' % (url, i))
-        start_urls.append('%s&s=%s&is_furnished=1' % (url, i))
+        # start_urls.append('%s&s=%s&is_furnished=1' % (url, i))
 
     furnished_responses = []
     unfurnished_responses = []
@@ -94,6 +94,8 @@ class CraigsListSpider(scrapy.Spider):
         processed_ids = []
 
         for response in responses:
+
+            print('RESPONSE')
 
             # region 1 = ubc / point grey / dunbar
             # region 2 = kits / kerrisdale / south granville / mount pleasant

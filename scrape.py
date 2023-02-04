@@ -11,7 +11,8 @@ class CraigsListSpider(scrapy.Spider):
 
     custom_settings = {
         # 0.5s download delay
-        'DOWNLOAD_DELAY': 2.0
+        'DOWNLOAD_DELAY': 2.0,
+        'DOWNLOADER_CLIENT_TLS_METHOD': 'TLSv1.2'
     }
 
     # build url

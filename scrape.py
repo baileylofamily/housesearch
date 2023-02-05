@@ -8,6 +8,10 @@ import re
 import time
 import json
 
+from selenium.webdriver.chrome.options import Options
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+
 pacific = zoneinfo.ZoneInfo('Canada/Pacific')
 now = datetime.datetime.now(pacific)
 
@@ -39,7 +43,8 @@ location_regions.append((49.31, -123.17, 49.26, -123.09, 6))
 furnished_ids = []
 unfurnished_ids = {}
 
-driver = webdriver.Firefox()
+# driver = webdriver.Firefox()
+driver = webdriver.Chrome(options=chrome_options)
 
 def search(is_furnished):
     for page in range(1):
@@ -130,7 +135,6 @@ for (id, href) in unfurnished_ids.items():
     posted_time_str = element.get_text().strip()
     posted_time = datetime.datetime.strptime(posted_time_str, "%Y-%m-%d %H:%M").replace(tzinfo=pacific)
     seconds = (now - posted_time).total_seconds()
-    print(f'seconds = {seconds}')
     # ignore if posting is older than three days
     if seconds > 3600 * 24 * 3:
         continue

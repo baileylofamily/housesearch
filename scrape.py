@@ -85,85 +85,98 @@ index_file = open('website/index.html', 'w')
 index_file.write('<head>\n')
 index_file.write('<link rel="icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">\n')
 index_file.write('<link rel="apple-touch-icon" type="image/png" href="https://baileylofamily.github.io/housesearch/home_128.png">\n')
-# index_file.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>\n')
-# index_file.write('<link rel="stylesheet" type="text/css" href="./style.css" />\n')
-# index_file.write('<script type="module" src="./index.js"></script>\n')
+index_file.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>\n')
+index_file.write('<link rel="stylesheet" type="text/css" href="./style.css" />\n')
+index_file.write('<script type="module" src="./index.js"></script>\n')
 index_file.write('<title>House Search</title>\n')
 index_file.write('<header><h1>House Search</h1></header>\n')
 index_file.write('</head>\n')
 index_file.write('<body>\n')
 index_file.write('<p></p>\n')
-# index_file.write('<div id="map"></div>\n')
-# index_file.write('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I&callback=initMap&v=weekly" defer></script>\n')
-# index_file.write('<p></p>\n')
+index_file.write('<div id="map"></div>\n')
+index_file.write('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI95bvyZO7clR-Lldk_Z46CrS9UyI4N9I&callback=initMap&v=weekly" defer></script>\n')
+index_file.write('<p></p>\n')
 
 index_file.write('<ol>\n')
 
 queries = len(unfurnished_ids)
 
-items = 0
+def add_listings(show_apartments=False):
 
-for (id, href) in unfurnished_ids.items():
-    print(f'Processing {items} of {len(unfurnished_ids)}')
+    items = 0
 
-    listing = requests.get(href)
+    for (id, href) in unfurnished_ids.items():
+        listing = requests.get(href)
 
-    soup = BeautifulSoup(listing.content, "html.parser")
+        soup = BeautifulSoup(listing.content, "html.parser")
 
-    element = soup.find('script', id="ld_posting_data")
+        price = soup.find('span', class_='price').get_text()
+        area = soup.find('span', class_='housing').get_text().split('-')[1].strip()
 
-    contents = json.loads(element.get_text())
+        element = soup.find('script', id='ld_posting_data')
 
-    title = contents['name']
-    type = contents['@type']
-    bedrooms = contents['numberOfBedrooms']
-    bathrooms = contents['numberOfBathroomsTotal']
-    latitude = float(contents['latitude'])
-    longitude = float(contents['longitude'])
+        contents = json.loads(element.get_text())
 
-    region = None
+        title = contents['name']
+        type = contents['@type']
+        bedrooms = contents['numberOfBedrooms']
+        bathrooms = contents['numberOfBathroomsTotal']
+        latitude = float(contents['latitude'])
+        longitude = float(contents['longitude'])
 
-    for (lat1, long1, lat2, long2, region_id) in location_regions:
-        if latitude <= lat1 and latitude > lat2 and longitude >= long1 and longitude < long2:
-            region = region_id
-            break
-    
-    if not region:
-        continue
+        if type.lower() == 'apartment' and show_apartments == False:
+            continue
+        if type.lower() != 'apartment' and show_apartments == True:
+            continue
 
-    element = soup.find('time', class_="date timeago")
-    posted_time_str = element.get_text().strip()
-    posted_time = datetime.datetime.strptime(posted_time_str, "%Y-%m-%d %H:%M").replace(tzinfo=pacific)
-    seconds = (now - posted_time).total_seconds()
-    # ignore if posting is older than three days
-    if seconds > 3600 * 24 * 3:
-        continue
+        region = None
 
-    relative_time = ''
-    if seconds < 3600:
-        relative_time = '< 1 hour'
-    else:
-        relative_time = '%s hours' % int(seconds / 3600)
+        for (lat1, long1, lat2, long2, region_id) in location_regions:
+            if latitude <= lat1 and latitude > lat2 and longitude >= long1 and longitude < long2:
+                region = region_id
+                break
+        
+        if not region:
+            continue
 
-    index_file.write('<li>\n')
-    index_file.write('<span style="font-weight:bold">')
-    index_file.write(f'{type.upper()}: ')
-    index_file.write('</span>\n')
-    index_file.write('<span>\n')
-    # index_file.write(f'{price} ({bedroom}br {area}ft) {title} \n')
-    index_file.write(f'({bedrooms}bed {bathrooms}bath) - {title} \n')
-    index_file.write('</span>\n')
-    index_file.write(f'<a href="{href}">{id}</a>\n')
-    index_file.write(f' [{relative_time}]\n')
-    index_file.write('</li>\n')
-    index_file.write('</br>\n')
+        element = soup.find('time', class_="date timeago")
+        posted_time_str = element.get_text().strip()
+        posted_time = datetime.datetime.strptime(posted_time_str, "%Y-%m-%d %H:%M").replace(tzinfo=pacific)
+        seconds = (now - posted_time).total_seconds()
+        # ignore if posting is older than three days
+        if seconds > 3600 * 24 * 3:
+            continue
 
-    script_file.write(f'const pos{items} = {{ lat: {latitude}, lng: {longitude} }};\n')
-    script_file.write(f'const marker{items} = new google.maps.Marker({{position: pos{items}, map: map, icon: "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red{items}.png"}});\n')
+        relative_time = ''
+        if seconds < 3600:
+            relative_time = '< 1 hour'
+        else:
+            relative_time = '%s hours' % int(seconds / 3600)
 
-    items += 1
+        print(f'Adding Listing - {title}')
 
-    time.sleep(1)
+        index_file.write('<li>\n')
+        index_file.write(f'<a href="{href}">{id}</a>\n')
+        index_file.write(f'<span font-weight:bold">{price}</span>\n')
+        index_file.write('<span>\n')
+        index_file.write(f'({area} {bedrooms}bed {bathrooms}bath) - {title} \n')
+        index_file.write('</span>\n')
+        index_file.write(f' [{relative_time}]\n')
+        index_file.write('</li>\n')
+        index_file.write('</br>\n')
+
+        if show_apartments == False:
+            script_file.write(f'const pos{items} = {{ lat: {latitude}, lng: {longitude} }};\n')
+            script_file.write(f'const marker{items} = new google.maps.Marker({{position: pos{items}, map: map, icon: "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red{items}.png"}});\n')
+
+        items += 1
+
+        time.sleep(1)
+
+index_file.write('<h1>Houses</h1>\n')
+add_listings(False)
+index_file.write('<h1>Apartments</h1>\n')
+add_listings(True)
 
 index_file.write('</ol>\n')
 index_file.write('<p></p>\n')
@@ -176,4 +189,3 @@ index_file.close()
 script_file.write('}\n')
 script_file.write('window.initMap = initMap;\n')
 script_file.close()
-

@@ -162,14 +162,13 @@ def add_listings(show_apartments=False):
         index_file.write(f'<a href="{href}">{id}</a>\n')
         index_file.write(f'<span font-weight:bold">{price}</span>\n')
         index_file.write('<span>\n')
-        index_file.write(f'({area} {bedrooms}bed {bathrooms}bath) - {title} \n')
+        index_file.write(f'({area} {bedrooms}bed {bathrooms}bath) - {title[:20]}... \n')
         index_file.write('</span>\n')
         index_file.write(f' [{relative_time}]\n')
         index_file.write('</li>\n')
         index_file.write('</br>\n')
 
         if show_apartments == False:
-            print(f'WRITE SCRIPT {items}')
             script_file.write(f'const pos{items} = {{ lat: {latitude}, lng: {longitude} }};\n')
             script_file.write(f'const marker{items} = new google.maps.Marker({{position: pos{items}, map: map, icon: "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red{items}.png"}});\n')
 

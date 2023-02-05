@@ -169,6 +169,7 @@ def add_listings(show_apartments=False):
         index_file.write('</br>\n')
 
         if show_apartments == False:
+            print(f'WRITE SCRIPT {items}')
             script_file.write(f'const pos{items} = {{ lat: {latitude}, lng: {longitude} }};\n')
             script_file.write(f'const marker{items} = new google.maps.Marker({{position: pos{items}, map: map, icon: "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red{items}.png"}});\n')
 

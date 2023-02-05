@@ -43,7 +43,7 @@ jobs:
         shell: bash
         run: |
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          apt install ./google-chrome-stable_current_amd64.deb
+          sudo apt install ./google-chrome-stable_current_amd64.deb
           pip install selenium
           pip install bs4
           pip install lxml

@@ -55,7 +55,7 @@ def search(is_furnished):
 
         driver.get(url)
 
-        time.sleep(1)
+        time.sleep(5)
 
         soup = BeautifulSoup(driver.page_source, "html.parser")
 
@@ -73,6 +73,9 @@ for (_, id) in search(is_furnished=True):
 for (href, id) in search(is_furnished=False):
     if id not in furnished_ids:
         unfurnished_ids[id] = href
+
+print(f'Furnished Items: {len(furnished_ids)}')
+print(f'Unfurnished Items: {len(unfurnished_ids)}')
 
 driver.quit()
 

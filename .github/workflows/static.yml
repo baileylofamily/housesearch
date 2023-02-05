@@ -42,11 +42,11 @@ jobs:
       - name: Scrape
         shell: bash
         run: |
-          pip install selenium
-          pip install bs4
-          pip install lxmlg
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           apt install ./google-chrome-stable_current_amd64.deb
+          pip install selenium
+          pip install bs4
+          pip install lxml
           python3 scrape.py
       - name: Setup Pages
         uses: actions/configure-pages@v2

@@ -42,9 +42,10 @@ jobs:
       - name: Scrape
         shell: bash
         run: |
-          source scraper/bin/activate
-          pip install Scrapy
-          scrapy runspider scrape.py
+          pip install selenium
+          pip install bs4
+          pip install lxml
+          python3 scrape.py
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact

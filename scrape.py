@@ -106,7 +106,7 @@ queries = len(unfurnished_ids)
 
 def add_listings(show_apartments=False):
 
-    items = 0
+    items = 1
 
     for (id, href) in unfurnished_ids.items():
         listing = requests.get(href)

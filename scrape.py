@@ -21,11 +21,11 @@ search_terms.append('min_price=3700')
 search_terms.append('max_price=6000')
 search_terms.append('min_bedrooms=2')
 search_terms.append('max_bedrooms=5')
-search_terms.append('min_bathrooms=2')
+# search_terms.append('min_bathrooms=2')
 search_terms.append('minSqft=900')
-search_terms.append('lat=49.2479')
-search_terms.append('lon=-123.1739')
-search_terms.append('search_distance=4.9') # miles
+# search_terms.append('lat=49.2479')
+# search_terms.append('lon=-123.1739')
+# search_terms.append('search_distance=4.9') # miles
 
 base_url = '&'.join(search_terms)
 

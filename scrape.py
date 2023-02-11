@@ -140,7 +140,8 @@ def add_listings(show_apartments=False):
                 break
         
         if not region:
-            continue
+            pass
+            # continue
 
         element = soup.find('time', class_="date timeago")
         posted_time_str = element.get_text().strip()
@@ -148,7 +149,8 @@ def add_listings(show_apartments=False):
         seconds = (now - posted_time).total_seconds()
         # ignore if posting is older than three days
         if seconds > 3600 * 24 * 3:
-            continue
+            pass
+            # continue
 
         relative_time = ''
         if seconds < 3600:

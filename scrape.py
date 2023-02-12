@@ -18,11 +18,12 @@ now = datetime.datetime.now(pacific)
 search_terms = ['https://vancouver.craigslist.org/search/apa?sort=date']
 search_terms.append('hasPic=1')
 search_terms.append('min_price=3700')
-search_terms.append('max_price=6000')
+search_terms.append('max_price=6200')
 search_terms.append('min_bedrooms=2')
-search_terms.append('max_bedrooms=5')
+search_terms.append('max_bedrooms=4')
 # search_terms.append('min_bathrooms=2')
 search_terms.append('minSqft=900')
+search_terms.append('maxSqft=3000')
 # search_terms.append('lat=49.2479')
 # search_terms.append('lon=-123.1739')
 # search_terms.append('search_distance=4.9') # miles
@@ -30,15 +31,17 @@ search_terms.append('minSqft=900')
 base_url = '&'.join(search_terms)
 
 location_regions = []
-location_regions.append((49.29, -123.3, 49.2, -123.177, 1))
-location_regions.append((49.296, -123.095, 49.229, -123.0357, 3))
-location_regions.append((49.27049, -123.177, 49.2, -123.076, 2))
-location_regions.append((49.279, -123.177, 49.27049, -123.1388, 2))
-location_regions.append((49.2759, -123.1388, 49.27049, -123.1324, 2))
-location_regions.append((49.27266, -123.11738, 49.27049, -123.095, 2))
+location_regions.append((49.3, -123.3, 49.2, -123.055, 1))
+
+# location_regions.append((49.29, -123.3, 49.2, -123.177, 1))
+# location_regions.append((49.296, -123.095, 49.229, -123.0357, 3))
+# location_regions.append((49.27049, -123.177, 49.2, -123.076, 2))
+# location_regions.append((49.279, -123.177, 49.27049, -123.1388, 2))
+# location_regions.append((49.2759, -123.1388, 49.27049, -123.1324, 2))
+# location_regions.append((49.27266, -123.11738, 49.27049, -123.095, 2))
 # location_regions.append((49.4, -123.129, 49.295, -122.93, 4))
 # location_regions.append((49.4, -123.3, 49.298, -123.129, 5))
-location_regions.append((49.31, -123.17, 49.26, -123.09, 6))
+# location_regions.append((49.31, -123.17, 49.26, -123.09, 6))
 
 furnished_ids = []
 unfurnished_ids = {}
@@ -47,7 +50,7 @@ unfurnished_ids = {}
 driver = webdriver.Chrome(options=chrome_options)
 
 def search(is_furnished):
-    for page in range(1):
+    for page in range(10):
         url = base_url
         if is_furnished:
             url = f'{url}&is_furnished=1'
@@ -73,6 +76,8 @@ for (_, id) in search(is_furnished=True):
 for (href, id) in search(is_furnished=False):
     if id not in furnished_ids:
         unfurnished_ids[id] = href
+    else:
+        print(f'[{id}] Furnished')
 
 print(f'Furnished Items: {len(furnished_ids)}')
 print(f'Unfurnished Items: {len(unfurnished_ids)}')
@@ -140,23 +145,28 @@ def add_listings(show_apartments=False):
                 break
         
         if not region:
-            pass
-            # continue
+            print(f'[{id}] Outside Zone Of Interest')
+            continue
 
-        element = soup.find('time', class_="date timeago")
-        posted_time_str = element.get_text().strip()
-        posted_time = datetime.datetime.strptime(posted_time_str, "%Y-%m-%d %H:%M").replace(tzinfo=pacific)
-        seconds = (now - posted_time).total_seconds()
-        # ignore if posting is older than three days
-        if seconds > 3600 * 24 * 3:
-            pass
-            # continue
+        len(soup.find_all('a', class_='manga_img'))
+        elements = soup.find_all('time', class_="date timeago")
+        recent_seconds = 3600 * 24 * 30 # 1 month ago
+        for element in elements:
+            posted_time_str = element.get_text().strip()
+            posted_time = datetime.datetime.strptime(posted_time_str, "%Y-%m-%d %H:%M").replace(tzinfo=pacific)
+            seconds = (now - posted_time).total_seconds()
+            if seconds < recent_seconds:
+                recent_seconds = seconds
+        # ignore if posting is older than seven days
+        if recent_seconds > 3600 * 24 * 7:
+            print(f'[{id}] Old Post')
+            continue
 
         relative_time = ''
-        if seconds < 3600:
+        if recent_seconds < 3600:
             relative_time = '< 1 hour'
         else:
-            relative_time = '%s hours' % int(seconds / 3600)
+            relative_time = '%s hours' % int(recent_seconds / 3600)
 
         print(f'Adding Listing - {title}')
 

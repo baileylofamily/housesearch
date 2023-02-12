@@ -171,7 +171,7 @@ def add_listings(show_apartments=False):
         else:
             relative_time = '%s hours' % int(recent_seconds / 3600)
 
-        print(f'Adding Listing - {title}')
+        print(f'[{id}] Adding Listing - {title}')
 
         index_file.write('<li>\n')
         index_file.write(f'<a href="{href}">{id}</a>\n')

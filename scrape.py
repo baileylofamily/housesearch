@@ -77,7 +77,7 @@ for (_, id) in search(is_furnished=True):
 
 for (href, id) in search(is_furnished=False):
     if id not in furnished_ids:
-        print('f[{id}] Unfurnished')
+        print(f'[{id}] Unfurnished')
         unfurnished_ids[id] = href
     else:
         print(f'[{id}] Furnished')

@@ -121,7 +121,10 @@ def add_listings(show_apartments=False):
 
         soup = BeautifulSoup(listing.content, "html.parser")
 
-        price = soup.find('span', class_='price').get_text()
+        price_object = soup.find('span', class_='price')
+        if not price_object:
+            continue
+        price = price_object.get_text()
         area = soup.find('span', class_='housing').get_text().split('-')[1].strip()
 
         element = soup.find('script', id='ld_posting_data')

@@ -161,7 +161,7 @@ def add_listings(show_apartments=False):
             if seconds < recent_seconds:
                 recent_seconds = seconds
         # ignore if posting is older than seven days
-        if recent_seconds > 3600 * 24 * 7:
+        if recent_seconds > 3600 * 24 * 3:
             print(f'[{id}] Old Post')
             continue
 

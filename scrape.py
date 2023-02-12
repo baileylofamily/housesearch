@@ -56,6 +56,8 @@ def search(is_furnished):
             url = f'{url}&is_furnished=1'
         url = f'{url}#search=1~list~{page}~0'
 
+        print(f'url = {url}')
+
         driver.get(url)
 
         time.sleep(5)
@@ -75,6 +77,7 @@ for (_, id) in search(is_furnished=True):
 
 for (href, id) in search(is_furnished=False):
     if id not in furnished_ids:
+        print('f[{id}] Unfurnished')
         unfurnished_ids[id] = href
     else:
         print(f'[{id}] Furnished')

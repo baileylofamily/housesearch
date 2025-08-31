@@ -305,7 +305,7 @@ def add_listings(show_apartments=False):
         index_file.write('</li>\n')
         index_file.write('</br>\n')
 
-                # Generate marker for ALL listings (both houses and apartments)
+        # Generate marker for ALL listings (both houses and apartments)
         script_file.write(f'const pos{id}_{items} = {{ lat: {latitude}, lng: {longitude} }};\n')
 
         # Use red markers for houses, yellow markers for apartments

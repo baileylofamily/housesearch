@@ -31,9 +31,9 @@ search_terms.append('max_bedrooms=3')
 # search_terms.append('min_bathrooms=2')
 search_terms.append('minSqft=900')
 search_terms.append('maxSqft=2000')
-# search_terms.append('lat=49.2479')
-# search_terms.append('lon=-123.1739')
-# search_terms.append('search_distance=4.9') # miles
+search_terms.append('lat=49.2493')
+search_terms.append('lon=-123.128')
+search_terms.append('search_distance=3') # miles
 
 base_url = '&'.join(search_terms)
 

@@ -24,46 +24,42 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    deploy:
+      environment:
+        name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install -y ./google-chrome-stable_current_amd64.deb
-          pip install selenium bs4 lxml
+        - name: Install dependencies
+          run: |
+            sudo apt update
+            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo apt install -y ./google-chrome-stable_current_amd64.deb
+            pip install selenium bs4 lxml
 
-      - name: Scrape site
-        run: |
-          mkdir -p website
-          python3 scrape.py
-          echo "=== Website dir after scrape ==="
-          ls -R website || true
-          # sanity check
-          if [ ! -f website/index.html ]; then
-            echo "ERROR: website/index.html not found"
-            exit 1
-          fi
+        - name: Scrape site
+          run: |
+            mkdir -p website
+            python3 scrape.py
+            echo "=== Website dir after scrape ==="
+            ls -R website || true
+            # sanity check
+            if [ ! -f website/index.html ]; then
+              echo "ERROR: website/index.html not found"
+              exit 1
+            fi
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
+        - name: Setup Pages
+          uses: actions/configure-pages@v3
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: website   # only upload generated site
+        - name: Upload artifact
+          uses: actions/upload-pages-artifact@v3
+          with:
+            path: website
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v3
+        - name: Deploy to GitHub Pages
+          id: deployment
+          uses: actions/deploy-pages@v3

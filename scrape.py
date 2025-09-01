@@ -268,12 +268,30 @@ def add_listings(show_apartments=False):
         print(f'[{id}] Elements {elements}')
         recent_seconds = 3600 * 24 * 30 # 1 month ago
         print(f'[{id}] Recent Seconds {recent_seconds}')
+
+        # Store the datetime attribute for relative time calculation
+        datetime_for_display = None
+
         for element in elements:
+            # Get the datetime attribute for filtering
             posted_time_str = element.get_text().strip()
             posted_time = datetime.datetime.strptime(posted_time_str, "%Y-%m-%d %H:%M").replace(tzinfo=pacific)
             seconds = (now - posted_time).total_seconds()
             if seconds < recent_seconds:
                 recent_seconds = seconds
+
+            # Get the datetime attribute for display (use the first one found)
+            if datetime_for_display is None:
+                datetime_attr = element.get('datetime')
+                if datetime_attr:
+                    # Parse the ISO format datetime (e.g., "2025-08-28T17:49:11-0700")
+                    try:
+                        datetime_for_display = datetime.datetime.fromisoformat(datetime_attr.replace('Z', '+00:00'))
+                        if datetime_for_display.tzinfo is None:
+                            datetime_for_display = datetime_for_display.replace(tzinfo=pacific)
+                    except ValueError:
+                        # Fallback to text content if datetime attribute parsing fails
+                        datetime_for_display = posted_time
         # ignore if posting is older than seven days
         if recent_seconds > 3600 * 24 * 3:
             print(f'[{id}] Old Post')
@@ -281,11 +299,20 @@ def add_listings(show_apartments=False):
         else:
             print(f'[{id}] New Post')
 
-        relative_time = ''
-        if recent_seconds < 3600:
-            relative_time = '< 1 hour'
+        # Calculate relative time using the datetime attribute for display
+        if datetime_for_display:
+            display_seconds = (now - datetime_for_display).total_seconds()
+            if display_seconds < 3600:
+                relative_time = '< 1 hour'
+            else:
+                relative_time = '%s hours' % int(display_seconds / 3600)
         else:
-            relative_time = '%s hours' % int(recent_seconds / 3600)
+            # Fallback to recent_seconds if no datetime attribute found
+            relative_time = ''
+            if recent_seconds < 3600:
+                relative_time = '< 1 hour'
+            else:
+                relative_time = '%s hours' % int(recent_seconds / 3600)
 
         print(f'[{id}] Adding Listing - {title}')
 

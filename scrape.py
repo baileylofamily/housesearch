@@ -265,7 +265,6 @@ def add_listings(show_apartments=False):
 
         len(soup.find_all('a', class_='manga_img'))
         elements = soup.find_all('time', class_="date timeago")
-        print(f'[{id}] Elements {elements}')
         recent_seconds = 3600 * 24 * 30 # 1 month ago
         print(f'[{id}] Recent Seconds {recent_seconds}')
 

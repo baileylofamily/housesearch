@@ -81,7 +81,7 @@ driver.execute_cdp_cmd('Network.setUserAgentOverride', {
 })
 
 def search(is_furnished):
-    for page in range(1):
+    for page in range(10):
         url = base_url
         if is_furnished:
             url = f'{url}&is_furnished=1'
@@ -193,7 +193,7 @@ queries = len(unfurnished_ids)
 
 def add_listings(show_apartments=False):
     # Limit to first 50 listings to be respectful to the server
-    MAX_LISTINGS = 50
+    MAX_LISTINGS = 5000
 
     items = 1
     processed = 0

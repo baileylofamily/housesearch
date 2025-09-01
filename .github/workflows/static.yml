@@ -48,6 +48,13 @@ jobs:
               echo "ERROR: website/index.html not found"
               exit 1
             fi
+        - name: Setup Pages
+          uses: actions/configure-pages@v3
+        - name: Upload artifact
+          id: deployment
+          uses: actions/upload-pages-artifact@v3
+          with:
+            path: website
 
     deploy:
       environment:
@@ -55,15 +62,6 @@ jobs:
         url: ${{ steps.deployment.outputs.page_url }}
       runs-on: ubuntu-latest
       steps:
-        - name: Setup Pages
-          uses: actions/configure-pages@v3
-
-        - name: Upload artifact
-          id: deployment
-          uses: actions/upload-pages-artifact@v3
-          with:
-            path: website
-
         - name: Deploy to GitHub Pages
           id: deployment
           uses: actions/deploy-pages@v4

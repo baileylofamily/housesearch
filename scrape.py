@@ -31,9 +31,9 @@ search_terms.append('max_bedrooms=3')
 # search_terms.append('min_bathrooms=2')
 search_terms.append('minSqft=900')
 search_terms.append('maxSqft=2000')
-search_terms.append('lat=49.2493')
-search_terms.append('lon=-123.128')
-search_terms.append('search_distance=3') # miles
+search_terms.append('lat=49.2529')
+search_terms.append('lon=-123.127')
+search_terms.append('search_distance=2') # miles
 
 base_url = '&'.join(search_terms)
 
@@ -265,6 +265,7 @@ def add_listings(show_apartments=False):
 
         len(soup.find_all('a', class_='manga_img'))
         elements = soup.find_all('time', class_="date timeago")
+        print(f'[{id}] Elements {elements}')
         recent_seconds = 3600 * 24 * 30 # 1 month ago
         print(f'[{id}] Recent Seconds {recent_seconds}')
         for element in elements:

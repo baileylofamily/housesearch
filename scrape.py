@@ -38,17 +38,10 @@ search_terms.append('maxSqft=2000')
 base_url = '&'.join(search_terms)
 
 location_regions = []
-# location_regions.append((3, 1))
 
-location_regions.append((49.2695, -123.1365, 49.2324, -123.1134, 1))
-# location_regions.append((49.296, -123.095, 49.229, -123.0357, 3))
-# location_regions.append((49.27049, -123.177, 49.2, -123.076, 2))
-# location_regions.append((49.279, -123.177, 49.27049, -123.1388, 2))
-# location_regions.append((49.2759, -123.1388, 49.27049, -123.1324, 2))
-# location_regions.append((49.27266, -123.11738, 49.27049, -123.095, 2))
-# location_regions.append((49.4, -123.129, 49.295, -122.93, 4))
-# location_regions.append((49.4, -123.3, 49.298, -123.129, 5))
-# location_regions.append((49.31, -123.17, 49.26, -123.09, 6))
+location_regions.append((49.2695, -123.1365, 49.2324, -123.1134, 1)) # oakridge area
+location_regions.append((49.2575, -123.1580, 49.2341, -123.1310, 2)) # kerrisdale area
+location_regions.append((49.2722, -123.1162, 49.2687, -123.1007, 3)) # olympic village area
 
 # Create a session with realistic headers to avoid being detected as a bot
 session = requests.Session()
@@ -160,7 +153,7 @@ driver.quit()
 script_file = open('website/index.js', 'w')
 script_file.write('// Initialize Google Maps\n')
 script_file.write('function initMap() {\n')
-script_file.write('  const vancouver = { lat: 49.255, lng: -123.139 };\n')
+script_file.write('  const vancouver = { lat: 49.25, lng: -123.139 };\n')
 script_file.write('  const map = new google.maps.Map(document.getElementById("map"), { zoom: 13, center: vancouver });\n')
 script_file.write('\n')
 script_file.write('  // Add hard-coded blue markers\n')

@@ -339,8 +339,10 @@ def add_listings(show_apartments=False):
         time.sleep(1)
 
 index_file.write('<h1>Houses</h1>\n')
+items = 1  # Reset counter for houses
 add_listings(False)
 index_file.write('<h1>Apartments</h1>\n')
+items = 1  # Reset counter for apartments
 add_listings(True)
 
 index_file.write('</ol>\n')
